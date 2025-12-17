@@ -2,9 +2,10 @@
 Main executable script for the 1D unsteady heat conduction project.
 """
  
-from io_utils import load_data_from_csv
  
-
+from io_utils import load_data_from_csv
+from math import log  
+from heat_plate import solve_implicit, plot_results 
 
 def main():
     
