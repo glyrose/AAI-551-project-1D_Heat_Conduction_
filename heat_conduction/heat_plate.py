@@ -183,6 +183,108 @@ class HeatPlate:
 
         x_arr = np.array(self.x)
         return T_inf + a * (L**2 - x_arr**2) + b
+        #plot T(t) at selected spatial positions. positions_cm is iterable of positions in cm (0 to L*100).
+    def plot_temperature_vs_time(self, positions_cm):
+       
+        times = np.array(self.time_points)
+        T_all = np.vstack(self.T_history)
+        x_cm = np.array(self.x) * 100.0
+        positions_cm = list(positions_cm)
+
+        plt.figure()
+        for x_target in positions_cm:
+            #find the nearest grid index
+            idx = int(round(x_target / (x_cm[-1]) * self.n_nodes))
+            idx = max(0, min(idx, self.n_nodes))
+            plt.plot(
+                times,
+                T_all[:, idx],
+                label=f"x = {x_target:g} cm",
+            )
+        plt.xlabel("Time (s)")
+        plt.ylabel("Temperature (°C)")
+        plt.title("Temperature at Selected Positions vs Time")
+        plt.legend()
+        plt.grid(True)
+
+    #plot T(x) at selected times. times_to_plot is iterable of times in seconds.
+    def plot_temperature_vs_position(self, times_to_plot):
+      
+        times = np.array(self.time_points)
+        T_all = np.vstack(self.T_history)
+        x_cm = np.array(self.x) * 100.0
+        times_to_plot = list(times_to_plot)
+
+        plt.figure()
+        for t_target in times_to_plot:
+            #find  the nearest time index
+            idx = int(round(t_target / self.dt))
+            idx = max(0, min(idx, len(times) - 1))
+            plt.plot(
+                x_cm,
+                T_all[idx, :],
+                label=f"t = {times[idx]:g} s",
+            )
+        plt.xlabel("Position (cm)")
+        plt.ylabel("Temperature (°C)")
+        plt.title("Temperature Distribution Across Plate at Selected Times")
+        plt.legend()
+        plt.grid(True)
+
+       
+       
+    #plot convective heat flux at the surface vs time
+    def plot_convective_heat_flux(self):
+     
+        times = np.array(self.time_points)
+        T_all = np.vstack(self.T_history)
+        T_surface = T_all[:, -1]
+        
+       # q_conv = h (T_surface - T_inf).
+        q_conv = self.material.h * (T_surface - self.material.T_inf)
+
+        plt.figure()
+        plt.plot(times, q_conv)
+        plt.xlabel("Time (s)")
+        plt.ylabel("Convective Heat Flux (W/m²)")
+        plt.title("Convective Heat Flux vs Time")
+        plt.grid(True)
+
+ 
+ 
+#wrapper function that calls HeatPlate.run() to perform the implicit time integration. 
+def solve_implicit(plate, steady_tol):
+  
+    plate.run(steady_tol=steady_tol)
+    return plate
+
+
+#wrapper function that generates all required plots.  
+def plot_results(plate: HeatPlate):
+   
+ 
+    positions_cm: Tuple[float, ...] = (0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+    times_to_plot: Tuple[float, ...] = (60.0, 5 * 60.0, 10 * 60.0, 20 * 60.0, 40 * 60.0, 80 * 60.0)
+
+    plate.plot_temperature_vs_time(positions_cm)
+    plate.plot_temperature_vs_position(times_to_plot)
+    plate.plot_convective_heat_flux()
+
+    #compare steady-state center & surface temperatures with analytical
+    T_ss_analytical = plate.analytical_steady_profile()
+    T_ss_numeric = plate.T_current
+
+    center_idx = 0
+    surface_idx = plate.n_nodes
+
+    print("=== Steady state comparison ===")
+    print(f"Analytical center T  = {T_ss_analytical[center_idx]:.2f} °C")
+    print(f"Numeric center T     = {T_ss_numeric[center_idx]:.2f} °C")
+    print(f"Analytical surface T = {T_ss_analytical[surface_idx]:.2f} °C")
+    print(f"Numeric surface T    = {T_ss_numeric[surface_idx]:.2f} °C")
+
+    plt.show()
+
 
   
     
