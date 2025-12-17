@@ -14,6 +14,23 @@ def main():
 
     #Print material properties with material __str__ method
     print(material)  
+ 
+    # Run implicit solver  
+    solve_implicit(plate, steady_tol=1e-4)
+
+
+    # estimate lumped-capacitance time to reach 95% of steady state
+    rho = material.rho
+    c = material.c
+    h = material.h
+    # Use math.log to estimate the lumped capacitance time scale
+    # theta(t)/theta_end = 0.95 = 1 - exp(-h t / (rho c)) ->  t = -(rho c / h) * ln(0.05)
+    t_lumped = -(rho * c / h) * log(0.05)
+
+    print(f"Estimated steady state time (lumped capacitance) ≈ {t_lumped:.2f} s")
+
+    # Generate all figures and print the numerical and analytical comparison
+    plot_results(plate)
 
     
 
