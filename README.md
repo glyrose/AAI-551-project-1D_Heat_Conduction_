@@ -33,3 +33,56 @@ The implicit finite difference method is used for numerical stability and accura
   using lumped-capacitance theory, and generates all required plots.
   
 **input_params.csv:** The Input file, which contains material properties, numerical parameters, and simulation time settings.
+
+## To run program 
+ ### Option 1: Run with the provided input parameters
+ 
+1. **Download the project**
+   - Click **Code → Download ZIP** on GitHub
+   - Extract the files to your local machine
+     
+2. **Open a terminal**
+   - Navigate to the project directory:
+     ```bash
+     cd heat_conduction
+     ```
+3. **Run the program**
+   ```bash
+   python main.py
+
+### Option 2: Run with your own input parameters (optional)
+1. **After downloading the project, open the file input_params.csv**
+  
+2. **Modify the  simulation parameters**
+   - Update the values for the material and numerical settings:
+     - `k` — thermal conductivity  
+     - `rho` — density  
+     - `c` — specific heat  
+     - `h` — convective heat transfer coefficient  
+     - `q_gen` — internal heat generation  
+     - `T_inf` — ambient temperature  
+     - `L` — plate half-thickness  
+     - `n_nodes` — number of spatial nodes  
+     - `dt` — time step size  
+     - `t_final` — total simulation time  
+     - `T_init` — initial temperature (optional)
+       
+3. **Save the file**
+   
+4. **Open a terminal**
+   - Navigate to the project directory:
+     ```bash
+     cd heat_conduction
+     ```
+5. **Run the program**
+   ```bash
+   python main.py
+
+## Notes 
+- Python 3.x is required
+- Required libraries: numpy, matplotlib
+
+## Team Contributions
+Fan Huang: heat_plate.py(Numerical model simulation solver) , material.py,input_params.csv
+
+Liye Guo: heat_plate.py (Plots for the model simulation), main.py, io_utils.py
