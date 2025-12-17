@@ -44,3 +44,17 @@ class Material:
             T_inf = self.T_inf,
             L = self.L,
         )
+    #Format description of all properties to display
+    def __str__(self):
+        lines = [
+            "Material properties:",
+            f"  k      = {self.k:.3g} W/(m·K)",
+            f"  rho    = {self.rho:.3g} kg/m³",
+            f"  c      = {self.c:.3g} J/(kg·K)",
+            f"  h      = {self.h:.3g} W/(m²·K)",
+            f"  q_gen  = {self.q_gen:.3g} W/m³",
+            f"  T_inf  = {self.T_inf:.3g} °C",
+            f"  L      = {self.L:.3g} m (half thickness)",
+            f"  alpha  = {self.alpha():.3e} m²/s",
+        ]
+        return "\n".join(lines)
