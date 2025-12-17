@@ -18,6 +18,9 @@ The given parameters are thermal conductivity k, density ρ, specific heat c, co
  
 The implicit finite difference method is used for numerical stability and accuracy.
 
+## Solution Approach
+The program will numerically solve the implicit finite difference form of the heat equation. The plate will be discretized into n+1 spatial nodes, and the time domain will be totaled in small increments Δt. At each time step a system of linear algebraic equations will be formed and solved using NumPy’s matrix operations to obtain the temperature field. The simulation continues until the temperature change between consecutive time steps is negligible which indicates steady state.
+
 ## Program structure
 **material.py**:  Material class, that stores the physical properties: thermal conductivity, density, specific heat,
  convective coefficient, internal heat generation, ambient temperature, and plate half thickness used in the 1D plate conduction problem.
